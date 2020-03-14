@@ -11,7 +11,7 @@
       <!-- 右侧 -->
       <el-container>
         <el-header>
-          1
+          <headers></headers>
         </el-header>
 
         <el-main>
@@ -24,11 +24,13 @@
 
 <script>
 import left from '@/components/home/aside'
+import headers from '@/components/home/header'
 export default {
   name: '',
   props: {},
   components: {
-    left
+    left,
+    headers
   },
   data () {
     return {
