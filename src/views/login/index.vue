@@ -87,9 +87,14 @@ export default {
     submit () {
       this.$refs.myForm.validate((yes) => {
         if (yes) {
-
-        } else {
-
+          this.$axios({
+            url: '/authorizations',
+            method: 'post',
+            data: this.form
+          }).then((res) => {
+            window.localStorage.setItem('user', res.data.data.token)
+            this.$router.push('/home')
+          })
         }
       })
     }
