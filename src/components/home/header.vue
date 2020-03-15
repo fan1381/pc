@@ -53,17 +53,10 @@ export default {
         this.$router.push('/login')
         this.$message('您已退出')
       }
-
-      // window.localStorage.removeItem('user')
-      // this.$router.push('/login')
     },
     getInfo () {
-      const token = window.localStorage.getItem('user')
       this.$axios({
-        url: '/user/profile',
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
+        url: '/user/profile'
       }).then(res => {
         this.userInfo = res.data.data
       })

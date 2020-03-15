@@ -1,29 +1,30 @@
 <template>
   <div class="layout-aside">
     <div class="title">
-      <img :src="bigImg " alt="" />
+      <img :src="bigImg" alt="" />
     </div>
     <el-menu
       background-color="#353b4e"
       text-color="pink"
       active-text-color="pink"
+      :router="true"
     >
       <el-menu-item index="">首页</el-menu-item>
 
-      <el-submenu index='2'>
+      <el-submenu index="2">
         <span slot="title">内容</span>
-        <el-menu-item index="">发布文章</el-menu-item>
-        <el-menu-item index="">文章列表</el-menu-item>
-        <el-menu-item index="">评论管理</el-menu-item>
-        <el-menu-item index="">素材管理</el-menu-item>
+        <el-menu-item index="/home/publish">发布文章</el-menu-item>
+        <el-menu-item index="/home/articles">文章列表</el-menu-item>
+        <el-menu-item index="/home/comment">评论管理</el-menu-item>
+        <el-menu-item index="/home/material">素材管理</el-menu-item>
       </el-submenu>
 
-      <el-submenu index='1'>
+      <el-submenu index="1">
         <span slot="title">粉丝</span>
-        <el-menu-item index=""> 图文数据</el-menu-item>
-        <el-menu-item index="">粉丝概况</el-menu-item>
-        <el-menu-item index="">粉丝画像</el-menu-item>
-        <el-menu-item index="">粉丝列表</el-menu-item>
+        <el-menu-item index="/home/picture">图文数据</el-menu-item>
+        <el-menu-item index="/home/fansinfo">粉丝概况</el-menu-item>
+        <el-menu-item index="/home/fanspicture">粉丝画像</el-menu-item>
+        <el-menu-item index="/home/fanslist">粉丝列表</el-menu-item>
       </el-submenu>
 
       <el-menu-item>账户信息</el-menu-item>
@@ -52,7 +53,7 @@ export default {
 
 <style scoped lang="less">
 .layout-aside {
-   width: 230px;
+  width: 230px;
   .el-menu {
     border-right: none;
   }
