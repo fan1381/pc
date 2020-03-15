@@ -3,9 +3,7 @@
     <!-- 大容器 -->
     <el-container>
       <!-- 左侧 -->
-      <el-aside
-        style="min-height:100vh;background-color:#353b4e;width:230px"
-      >
+      <el-aside style="min-height:100vh;background-color:#353b4e;width:230px">
         <left></left>
       </el-aside>
       <!-- 右侧 -->
@@ -23,19 +21,12 @@
 </template>
 
 <script>
-import left from '@/components/home/aside'
-import headers from '@/components/home/header'
 export default {
   name: '',
   props: {},
-  components: {
-    left,
-    headers
-  },
+  components: {},
   data () {
-    return {
-
-    }
+    return {}
   },
   computed: {},
   watch: {},
