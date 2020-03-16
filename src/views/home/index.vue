@@ -8,12 +8,14 @@
       </el-aside>
       <!-- 右侧 -->
       <el-container>
+        <!-- 头部 -->
         <el-header>
           <headers></headers>
         </el-header>
 
+        <!-- 中间 -->
         <el-main>
-          1
+          <router-view></router-view>
         </el-main>
       </el-container>
     </el-container>
