@@ -18,6 +18,10 @@ const routes = [{
     path: '/home/comment',
     component: () =>
       import('../views/comment/index.vue')
+  }, {
+    path: '/home/material',
+    component: () =>
+      import('../views/material/index.vue')
   }]
 }
 ]
