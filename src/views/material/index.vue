@@ -1,6 +1,6 @@
 <template>
   <div class="">
-    <el-card>
+    <el-card v-loading="loading">
       <!-- 面包屑 -->
       <crumb slot="header">
         <template slot="title">
@@ -13,14 +13,18 @@
       </el-row>
 
       <el-row>
-        <el-tabs v-model="activeName"  @tab-click="changeTabs">
+        <el-tabs v-model="activeName" @tab-click="changeTabs">
           <el-tab-pane label="全部图片" name="all">
             <div class="one">
               <el-card class="card" v-for="(item, index) in img" :key="index">
                 <img :src="item.url" alt="" />
                 <el-row class="row">
-                  <i class="el-icon-star-on"></i>
-                  <i class="el-icon-delete-solid"></i>
+                  <i
+                    class="el-icon-star-on"
+                    @click="collects(item)"
+                    :style="{ color: item.is_collected ? 'red' : '#000' }"
+                  ></i>
+                  <i class="el-icon-delete-solid" @click="deletes(item.id)"></i>
                 </el-row>
               </el-card>
             </div>
@@ -58,7 +62,8 @@ export default {
         pageSize: 8,
         total: 0,
         currentPage: 1
-      }
+      },
+      loading: false // 收藏状态
     }
   },
   computed: {},
@@ -89,6 +94,35 @@ export default {
     changePage (newPage) {
       this.page.currentPage = newPage
       this.getImg()
+    },
+    // 收藏或取消收藏
+    async collects (item) {
+      this.loading = true
+      await this.$axios({
+        url: `/user/images/${item.id}`,
+        method: 'put',
+        data: {
+          collect: !item.is_collected
+        }
+      })
+      this.loading = false
+      this.getImg()
+    },
+    // 删除
+    async deletes (id) {
+      // this.loading = true
+      await this.$confirm('确定删除？')
+        .then(() => {
+          this.$axios({
+            method: 'delete',
+            url: `/user/images/${id}`
+          }).then(() => {
+            this.getImg()
+          })
+        })
+        .catch(() => {})
+
+      // this.loading = false
     }
   }
 }

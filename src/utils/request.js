@@ -14,7 +14,7 @@ axios.interceptors.request.use(function (config) {
 
 // 处理大数字类型
 axios.defaults.transformResponse = [function (data) {
-  return JSONBig.parse(data)
+  return data ? JSONBig.parse(data) : {}
 }]
 
 // 响应拦截器
