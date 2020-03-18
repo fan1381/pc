@@ -13,7 +13,7 @@
       </el-row>
 
       <el-row>
-        <el-tabs>
+        <el-tabs v-model="activeName"  @tab-click="changeTabs">
           <el-tab-pane label="全部图片" name="all">
             <div class="one">
               <el-card class="card" v-for="(item, index) in img" :key="index">
@@ -29,6 +29,18 @@
           <el-tab-pane label="收藏图片" name="collect"> </el-tab-pane>
         </el-tabs>
       </el-row>
+      <!-- 分页 -->
+      <el-row type="flex" justify="center">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :total="page.total"
+          :page-size="page.pageSize"
+          :current-page="page.currentPage"
+          @current-change="changePage"
+        >
+        </el-pagination>
+      </el-row>
     </el-card>
   </div>
 </template>
@@ -40,7 +52,13 @@ export default {
   components: {},
   data () {
     return {
-      img: []
+      img: [],
+      activeName: 'all',
+      page: {
+        pageSize: 8,
+        total: 0,
+        currentPage: 1
+      }
     }
   },
   computed: {},
@@ -53,11 +71,24 @@ export default {
     // 获取图片素材
     getImg () {
       this.$axios({
-        url: '/user/images'
+        url: '/user/images',
+        params: {
+          collect: false,
+          page: this.page.currentPage,
+          per_page: this.page.pageSize
+        }
       }).then(res => {
         this.img = res.data.data.results
-        console.log(this.img)
+        this.page.total = res.data.data.total_count
       })
+    },
+    changeTabs () {
+      this.page.currentPage = 1
+      this.getImg()
+    },
+    changePage (newPage) {
+      this.page.currentPage = newPage
+      this.getImg()
     }
   }
 }
@@ -66,7 +97,6 @@ export default {
 <style scoped lang="less">
 .one {
   display: flex;
-  justify-content: space-between;
   flex-wrap: wrap;
   .card {
     width: 200px;
