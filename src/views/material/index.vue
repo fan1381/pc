@@ -17,7 +17,7 @@
           <el-tab-pane label="全部图片" name="all">
             <div class="one">
               <el-card class="card" v-for="(item, index) in img" :key="index">
-                <img :src="item.url" alt="" />
+                <img @click="clickImg(index)" :src="item.url" alt="" />
                 <el-row class="row">
                   <i
                     class="el-icon-star-on"
@@ -30,7 +30,13 @@
             </div>
           </el-tab-pane>
 
-          <el-tab-pane label="收藏图片" name="collect"> </el-tab-pane>
+          <el-tab-pane label="收藏图片" name="collect">
+            <div class="one">
+              <el-card class=" card" v-for="item in img" :key="item.id">
+                <img  @click="openDialog(index)" :src="item.url" alt />
+              </el-card>
+            </div>
+          </el-tab-pane>
         </el-tabs>
       </el-row>
       <!-- 分页 -->
@@ -46,6 +52,18 @@
         </el-pagination>
       </el-row>
     </el-card>
+    <!-- 弹层走马灯 -->
+    <el-dialog @opened='open' :visible.sync="dialogVisible" width="60%">
+      <template>
+        <el-carousel ref="open" :interval="4000" type="card" height="400px">
+          <el-carousel-item v-for="(item,index) in img" :key="index" class="qq" >
+            <div class="medium">
+              <img :src="item.url" alt="" />
+            </div>
+          </el-carousel-item>
+        </el-carousel>
+      </template>
+    </el-dialog>
   </div>
 </template>
 
@@ -63,7 +81,9 @@ export default {
         total: 0,
         currentPage: 1
       },
-      loading: false // 收藏状态
+      loading: false, // 收藏状态
+      dialogVisible: false, // 弹层状态
+      index: 0// 走马灯的索引
     }
   },
   computed: {},
@@ -78,7 +98,7 @@ export default {
       this.$axios({
         url: '/user/images',
         params: {
-          collect: false,
+          collect: this.activeName === 'collect',
           page: this.page.currentPage,
           per_page: this.page.pageSize
         }
@@ -123,6 +143,15 @@ export default {
         .catch(() => {})
 
       // this.loading = false
+    },
+    // 打开弹层记录索引
+    clickImg (index) {
+      this.dialogVisible = true
+      this.index = index
+    },
+    // 打来弹层的回调，来手动修改轮播的图片的开始位置
+    open () {
+      this.$refs.open.setActiveItem(this.index)
     }
   }
 }
@@ -132,6 +161,8 @@ export default {
 .one {
   display: flex;
   flex-wrap: wrap;
+  cursor: pointer;
+
   .card {
     width: 200px;
     height: 220px;
@@ -161,5 +192,30 @@ export default {
       }
     }
   }
+}
+// 走马灯
+.el-carousel__item div {
+  color: #475669;
+  opacity: 0.75;
+  margin: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.el-carousel__item:nth-child(2n) {
+  background-color: #99a9bf;
+}
+
+.el-carousel__item:nth-child(2n + 1) {
+  background-color: #d3dce6;
+}
+.qq {
+  height: 100%;
+}
+.medium {
+  height: 100%;
 }
 </style>
