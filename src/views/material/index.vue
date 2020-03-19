@@ -9,7 +9,9 @@
       </crumb>
 
       <el-row type="flex" justify="end">
-        <el-button type="primary">上传图片</el-button>
+        <el-upload action="" :http-request="uploadImg">
+          <el-button size="small" type="primary" >点击上传</el-button>
+        </el-upload>
       </el-row>
 
       <el-row>
@@ -33,7 +35,7 @@
           <el-tab-pane label="收藏图片" name="collect">
             <div class="one">
               <el-card class=" card" v-for="item in img" :key="item.id">
-                <img  @click="openDialog(index)" :src="item.url" alt />
+                <img @click="openDialog(index)" :src="item.url" alt />
               </el-card>
             </div>
           </el-tab-pane>
@@ -53,10 +55,14 @@
       </el-row>
     </el-card>
     <!-- 弹层走马灯 -->
-    <el-dialog @opened='open' :visible.sync="dialogVisible" width="60%">
+    <el-dialog @opened="open" :visible.sync="dialogVisible" width="60%">
       <template>
         <el-carousel ref="open" :interval="4000" type="card" height="400px">
-          <el-carousel-item v-for="(item,index) in img" :key="index" class="qq" >
+          <el-carousel-item
+            v-for="(item, index) in img"
+            :key="index"
+            class="qq"
+          >
             <div class="medium">
               <img :src="item.url" alt="" />
             </div>
@@ -83,7 +89,7 @@ export default {
       },
       loading: false, // 收藏状态
       dialogVisible: false, // 弹层状态
-      index: 0// 走马灯的索引
+      index: 0 // 走马灯的索引
     }
   },
   computed: {},
@@ -152,6 +158,21 @@ export default {
     // 打来弹层的回调，来手动修改轮播的图片的开始位置
     open () {
       this.$refs.open.setActiveItem(this.index)
+    },
+    // 上传
+    uploadImg (params) {
+      this.loading = true
+      const data = new FormData()
+      data.append('image', params.file)
+      this.$axios({
+        url: '/user/images',
+        method: 'post',
+        data
+      }).then(() => {
+        this.loading = false
+        this.$message('上传成功')
+        this.getImg()
+      })
     }
   }
 }
