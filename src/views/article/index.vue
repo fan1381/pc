@@ -157,7 +157,6 @@ export default {
       }).then(res => {
         this.list = res.data.data.results
         this.page.total = res.data.data.total_count
-        console.log(res)
       })
     },
     // 获取文章频道
