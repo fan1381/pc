@@ -35,6 +35,11 @@
           </el-radio-group>
         </el-form-item>
 
+        <!-- 封面组件 -->
+        <el-form-item>
+          <cover-img :list='form.cover.images'></cover-img>
+        </el-form-item>
+
         <el-form-item label="频道" prop="channel_id">
           <el-select v-model="form.channel_id">
             <el-option
@@ -56,11 +61,12 @@
 </template>
 
 <script>
-// import { Loading } from 'element-ui'
 export default {
   name: '',
   props: {},
-  components: {},
+  components: {
+
+  },
   data () {
     return {
       form: {
@@ -82,13 +88,22 @@ export default {
     }
   },
   computed: {},
-  watch: {},
+  watch: {
+    'form.cover.type': function () {
+      if (this.form.cover.type === -1 || this.form.cover.type === 0) {
+        this.form.cover.images = []
+      } else if (this.form.cover.type === 1) {
+        this.form.cover.images = ['']
+      } else if (this.form.cover.type === 3) {
+        this.form.cover.images = ['', '', '']
+      }
+    }
+  },
   created () {
     this.getChannels()
   },
   mounted () {},
   methods: {
-
     getChannels () {
       this.$axios({
         url: '/channels'
@@ -97,7 +112,7 @@ export default {
       })
     },
     send () {
-      this.$refs.myForm.validate((yes) => {
+      this.$refs.myForm.validate(yes => {
         if (yes) {
           this.loading = true
           this.$axios({
@@ -105,14 +120,16 @@ export default {
             method: 'post',
             params: { draft: false },
             data: this.form
-          }).then((res) => {
-            this.loading = false
-            this.$message('发布成功')
-            // this.$router.push('/home/articles')
-          }).catch(() => {
-            this.loading = false
-            this.$message('发布失败')
           })
+            .then(res => {
+              this.loading = false
+              this.$message('发布成功')
+              // this.$router.push('/home/articles')
+            })
+            .catch(() => {
+              this.loading = false
+              this.$message('发布失败')
+            })
         }
       })
     }
