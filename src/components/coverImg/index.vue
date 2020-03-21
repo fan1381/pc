@@ -1,11 +1,18 @@
 <template>
   <div class="box">
     <div
-      @click="openDialog"
       class="img"
       v-for="(item, index) in list"
       :key="index"
+      @click="openDialog(index)"
+
     >
+      <img
+
+        :src="item"
+        alt=""
+      />
+
       <!-- <span>点击添加图片</span> -->
     </div>
     <el-dialog
@@ -16,14 +23,14 @@
       <el-tabs v-model="tabs">
         <el-tab-pane label="素材库" name="material">
           <div class="material ">
-            <el-card class="card" v-for="item in img" :key="item.id">
-              <img :src="item.url" alt="" />
+            <el-card class="card" v-for="(item, index) in img" :key="index">
+              <img @click="material(index)" :src="item.url" alt="" />
             </el-card>
           </div>
         </el-tab-pane>
 
         <el-tab-pane label="上传" class="load" name="upload">
-          <el-upload :show-file-list="false" action="" class="upload">
+          <el-upload :http-request="uploads" :show-file-list="false" action="" class="upload">
             <i class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-tab-pane>
@@ -40,8 +47,9 @@ export default {
   data () {
     return {
       dialog: false,
-      img: [],
-      tabs: 'material'
+      img: [], // 素材库
+      tabs: 'material',
+      pinkIndex: null
     }
   },
   computed: {},
@@ -51,8 +59,9 @@ export default {
   },
   mounted () {},
   methods: {
-    openDialog () {
+    openDialog (index) {
       this.dialog = true
+      this.pinkIndex = index
     },
     closeDialog () {
       this.dialog = false
@@ -66,7 +75,28 @@ export default {
         }
       }).then(res => {
         this.img = res.data.data.results
-        console.log(this.img)
+      })
+    },
+    // 点击素材库图片在父组件预览
+    material (index) {
+      const url = this.img[index].url
+      const pink = this.pinkIndex
+      this.list[pink] = url
+      this.dialog = false
+    },
+    // 上传功能
+    uploads (params) {
+      const data = new FormData()
+      data.append('image', params.file)
+      this.$axios({
+        url: '/user/images',
+        method: 'post',
+        data
+      }).then((res) => {
+        const uploadUrl = res.data.data.url
+        const index = this.pinkIndex
+        this.list[index] = uploadUrl
+        this.dialog = false
       })
     }
   }
@@ -84,6 +114,10 @@ export default {
   border: 1px solid #ccc;
   margin: 5px;
   //   opacity: 0.7;
+  img {
+    width: 100%;
+    height: 100%;
+  }
 }
 // 上传
 .load {
