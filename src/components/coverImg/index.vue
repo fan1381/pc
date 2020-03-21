@@ -5,15 +5,8 @@
       v-for="(item, index) in list"
       :key="index"
       @click="openDialog(index)"
-
     >
-      <img
-
-        :src="item"
-        alt=""
-      />
-
-      <!-- <span>点击添加图片</span> -->
+      <img :src="item" alt="" />
     </div>
     <el-dialog
       title="请选择"
@@ -30,7 +23,12 @@
         </el-tab-pane>
 
         <el-tab-pane label="上传" class="load" name="upload">
-          <el-upload :http-request="uploads" :show-file-list="false" action="" class="upload">
+          <el-upload
+            :http-request="uploads"
+            :show-file-list="false"
+            action=""
+            class="upload"
+          >
             <i class="el-icon-plus avatar-uploader-icon"></i>
           </el-upload>
         </el-tab-pane>
@@ -56,6 +54,7 @@ export default {
   watch: {},
   created () {
     this.getImg()
+    console.log(+8888)
   },
   mounted () {},
   methods: {
@@ -92,7 +91,7 @@ export default {
         url: '/user/images',
         method: 'post',
         data
-      }).then((res) => {
+      }).then(res => {
         const uploadUrl = res.data.data.url
         const index = this.pinkIndex
         this.list[index] = uploadUrl

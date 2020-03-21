@@ -37,7 +37,7 @@
 
         <!-- 封面组件 -->
         <el-form-item>
-          <cover-img :list='form.cover.images'></cover-img>
+          <cover-img :list="form.cover.images"></cover-img>
         </el-form-item>
 
         <el-form-item label="频道" prop="channel_id">
@@ -52,7 +52,7 @@
         </el-form-item>
 
         <el-form-item>
-          <el-button type="primary" @click="send">发布</el-button>
+          <el-button type="primary" @click="send()">发布</el-button>
           <el-button>存草稿</el-button>
         </el-form-item>
       </el-form>
@@ -61,12 +61,11 @@
 </template>
 
 <script>
+// import func from '../../../vue-temp/vue-editor-bridge'
 export default {
   name: '',
   props: {},
-  components: {
-
-  },
+  components: {},
   data () {
     return {
       form: {
@@ -97,10 +96,26 @@ export default {
       } else if (this.form.cover.type === 3) {
         this.form.cover.images = ['', '', '']
       }
+    },
+    $route: function (to, from) {
+      if (to.params.articleId) {
+      } else {
+        this.form = {
+          title: '',
+          content: '',
+          cover: {
+            type: 0,
+            images: []
+          },
+          channel_id: null
+        }
+      }
     }
   },
   created () {
     this.getChannels()
+    const { articleId } = this.$route.params
+    articleId && this.edit(articleId)
   },
   mounted () {},
   methods: {
@@ -111,20 +126,20 @@ export default {
         this.channels = res.data.data.channels
       })
     },
-    send () {
+    send (draft) {
       this.$refs.myForm.validate(yes => {
         if (yes) {
+          const { articleId } = this.$route.params
           this.loading = true
           this.$axios({
-            url: '/articles',
-            method: 'post',
-            params: { draft: false },
+            url: articleId ? `/articles/${articleId}` : '/articles',
+            method: articleId ? 'put' : 'post',
+            params: { draft },
             data: this.form
           })
             .then(res => {
               this.loading = false
               this.$message('发布成功')
-              // this.$router.push('/home/articles')
             })
             .catch(() => {
               this.loading = false
@@ -132,8 +147,16 @@ export default {
             })
         }
       })
+    },
+    edit (articleId) {
+      this.$axios({
+        url: `/articles/${articleId}`
+      }).then(res => {
+        const data = res.data.data
+        this.form = data
+        console.log(this.form)
+      })
     }
-
   }
 }
 </script>

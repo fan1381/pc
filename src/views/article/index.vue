@@ -44,7 +44,7 @@
         </el-form-item>
       </el-form>
 
-      <el-row class="text">共找到{{ this.page.total}}条符合条件的内容</el-row>
+      <el-row class="text">共找到{{ this.page.total }}条符合条件的内容</el-row>
 
       <!-- 列表 -->
       <div class="box" v-for="item in list" :key="item.id.toString()">
@@ -64,19 +64,19 @@
         </div>
 
         <div class="right">
-          <span> <i class="el-icon-edit"></i>修改</span>
+          <span @click="edit(item)"> <i class="el-icon-edit"></i>修改</span>
           <span><i class="el-icon-delete"></i>删除</span>
         </div>
       </div>
 
       <!-- 分页 -->
-      <el-row type="flex" justify="center" style='margin-top:15px;'>
+      <el-row type="flex" justify="center" style="margin-top:15px;">
         <el-pagination
           :page-size="page.pageSize"
           :current-page="page.currentPage"
           layout="prev, pager, next"
           :total="page.total"
-          @current-change='changePage'
+          @current-change="changePage"
         >
         </el-pagination>
       </el-row>
@@ -101,7 +101,6 @@ export default {
         total: 0,
         pageSize: 10,
         currentPage: 1
-
       },
       img: require('../../assets/img/404.png'),
       list: [], // 文章列表
@@ -170,8 +169,10 @@ export default {
     changePage (newPage) {
       this.page.currentPage = newPage
       this.cahngeStatus()
+    },
+    edit (item) {
+      this.$router.push(`/home/publish/${item.id.toString()}`)
     }
-
   }
 }
 </script>
